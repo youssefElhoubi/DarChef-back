@@ -6,4 +6,6 @@ export class CreateCustomerDto {
         type: 'Point';
         coordinates: [number, number];
     }[];
+    @IsNotEmpty()
+    user_ID!: string;
 }
