@@ -29,3 +29,4 @@ export class Customer {
   dietaryPreferences!: string[];
 }
 
+export const CustomerSchema = SchemaFactory.createForClass(Customer);
