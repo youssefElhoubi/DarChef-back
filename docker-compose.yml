@@ -1,5 +1,4 @@
 services:
-
   api:
     build:
       context: .
@@ -8,7 +7,7 @@ services:
     container_name: nest-api
 
     ports:
-      - "3000:3000"
+      - '3000:3000'
 
     environment:
       NODE_ENV: production
@@ -27,7 +26,7 @@ services:
     container_name: nest-mongo
 
     ports:
-      - "27017:27017"
+      - '27017:27017'
 
     environment:
       MONGO_INITDB_DATABASE: cook-platform
@@ -36,13 +35,33 @@ services:
       - mongo_data:/data/db
 
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
       interval: 5s
       timeout: 5s
       retries: 5
 
     restart: unless-stopped
 
+  mongo-express:
+    image: mongo-express:latest
+
+    container_name: mongo-express
+
+    ports:
+      - '8081:8081'
+
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
+      ME_CONFIG_BASICAUTH: 'false'
+      ME_CONFIG_BASICAUTH_ENABLED: 'false'
+      ME_CONFIG_SITE_SESSIONSECRET: secret
+
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+    restart: unless-stopped
 
 volumes:
   mongo_data:
