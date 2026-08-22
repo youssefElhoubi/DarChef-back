@@ -1,13 +1,37 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-import * as mongoose from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
-export type CooksDocument = HydratedDocument<Cooks> ;
+export type CookDocument = HydratedDocument<Cook>;
 
 @Schema()
-export class Cooks {
-  @Prop({ required: true })
-  name: string;
+export class Cook {
+  @Prop({
+    type: [Types.ObjectId],
+    ref: 'Equipment',
+    default: [],
+  })
+  equipmentList!: Types.ObjectId[];
+
+  @Prop({
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  })
+  kitchenLocation!: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
+
+  @Prop({ default: false })
+  aiVerified!: boolean;
+
+  @Prop({ default: 0, min: 0, max: 5 })
+  averageRating!: number;
 }
 
-export const CooksSchema = SchemaFactory.createForClass(Cooks);
