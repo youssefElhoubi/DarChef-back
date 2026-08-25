@@ -7,7 +7,7 @@ export type CustomerDocument = HydratedDocument<Customer>;
 @Schema()
 export class Customer {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: "User" })
-    user_ID!: mongoose.Types.ObjectId;
+  user_ID!: mongoose.Types.ObjectId;
   @Prop({
     type: [
       {
