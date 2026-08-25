@@ -4,6 +4,7 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { Model } from 'mongoose';
 import { Customer } from 'src/schemas/customers.schema';
+import { ResurceExists } from 'src/exeptions/ResurceExists';
 
 @Injectable()
 export class CustomerService {
@@ -11,23 +12,27 @@ export class CustomerService {
     @InjectModel(Customer.name) private readonly customerModel: Model<Customer>
   ) {}
   async create(createCustomerDto: CreateCustomerDto) {
+    const existingCustomer = await this.customerModel.findOne({ user_ID: createCustomerDto.user_ID });
+    if (existingCustomer) {
+      throw new ResurceExists(`Customer with this user_ID ${createCustomerDto.user_ID} already exists`);
+    }
     const customer : Customer = await this.customerModel.create(createCustomerDto);
     return customer;
   }
 
-  findAll() {
-    return `This action returns all customer`;
+  async findAll(): Promise<Customer[]> {
+    return await this.customerModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} customer`;
+  async findOne(id: number): Promise<Customer | null> {
+    return await this.customerModel.findById(id);
   }
 
-  update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    return `This action updates a #${id} customer`;
+  async update(id: number, updateCustomerDto: UpdateCustomerDto): Promise<Customer | null> {
+    return await this.customerModel.findByIdAndUpdate(id, updateCustomerDto, { new: true });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  async remove(id: number): Promise<Customer | null> {
+    return await this.customerModel.findById(id).deleteOne();
   }
 }
