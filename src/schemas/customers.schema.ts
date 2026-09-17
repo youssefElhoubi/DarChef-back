@@ -1,10 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { User } from './User.schema';
 
 export type CustomerDocument = HydratedDocument<Customer>;
 
 @Schema()
 export class Customer {
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: "User" })
+  user_ID!: mongoose.Types.ObjectId;
   @Prop({
     type: [
       {
@@ -29,3 +32,4 @@ export class Customer {
   dietaryPreferences!: string[];
 }
 
+export const CustomerSchema = SchemaFactory.createForClass(Customer);

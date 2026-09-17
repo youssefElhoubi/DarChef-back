@@ -1,10 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import mongoose, { HydratedDocument, Types } from 'mongoose';
 
 export type CookDocument = HydratedDocument<Cook>;
 
 @Schema()
 export class Cook {
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: "User" })
+    user_ID!: mongoose.Types.ObjectId;
   @Prop({
     type: [Types.ObjectId],
     ref: 'Equipment',
