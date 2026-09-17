@@ -5,6 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CustomerModule } from './customer/customer.module';
+import { AllExceptionsFilter } from './config/Execption handler';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -27,6 +29,11 @@ import { CustomerModule } from './customer/customer.module';
     CustomerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    }
+  ],
 })
 export class AppModule {}
