@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { CustomerModule } from './customer/customer.module';
 import { AllExceptionsFilter } from './config/Execption handler';
 import { APP_FILTER } from '@nestjs/core';
+import { UserService } from './user/user.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -27,13 +29,16 @@ import { APP_FILTER } from '@nestjs/core';
     AuthModule,
 
     CustomerModule,
+
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService,
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
-    }
+    },
+    UserService
   ],
 })
 export class AppModule {}
