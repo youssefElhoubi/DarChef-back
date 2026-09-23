@@ -10,9 +10,10 @@ import { Payload } from 'src/Types/paylaod';
 export class UserService {
     constructor(
         @InjectModel('user') private readonly userModel: Model<UserDocument>
+        private 
     ) { }
 
-    public async login(email: string, password: string): Promise<Payload | null> {
+    public async login(email: string, password: string): Promise<Payload> {
         const user = await this.userModel.findOne({ email }).exec();
         if (!user) {
             throw new ResourceNotFound(`User with email ${email} not found or password is incorrect`, 404);
