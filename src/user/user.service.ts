@@ -5,6 +5,8 @@ import { ResourceNotFound } from 'src/exeptions/ResourceNotFound';
 import { UserDocument } from 'src/schemas/User.schema';
 import * as bcrypt from 'bcrypt';
 import { Payload } from 'src/Types/paylaod';
+import { CreateUserDto } from './user.dto';
+import { ResurceExists } from 'src/exeptions/ResurceExists';
 
 @Injectable()
 export class UserService {
@@ -21,12 +23,28 @@ export class UserService {
         if (!isValidated) {
             throw new ResourceNotFound(`User with email ${email} not found or password is incorrect`, 404);
         }
-        const payload: Payload =  {
+        const payload: Payload = {
             userId: user._id.toString(),
             email: user.email,
             role: user.role
         };
 
         return payload;
+    }
+    public async sighnUp(request: CreateUserDto): Promise<Payload> {
+        const user = await this.userModel.findOne({ email: request.email });
+        if (user) {
+            throw new ResurceExists(`uesr with email ${request.email} alredy exist`);
+        }
+        const newUser = await this.userModel.create({
+            passwordHash: await bcrypt.hash(request.password, 10),
+            ...request
+        })
+        const payload = {
+            userId: newUser._id.toString(),
+            email: newUser.email,
+            role: newUser.role
+        };
+        return payload ;
     }
 }
