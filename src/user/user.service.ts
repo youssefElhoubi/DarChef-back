@@ -10,7 +10,6 @@ import { Payload } from 'src/Types/paylaod';
 export class UserService {
     constructor(
         @InjectModel('user') private readonly userModel: Model<UserDocument>
-        private 
     ) { }
 
     public async login(email: string, password: string): Promise<Payload> {
