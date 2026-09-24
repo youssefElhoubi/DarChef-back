@@ -14,5 +14,4 @@ export class AuthController {
   public async sighnUp(@Body() request: CreateUserDto) {
     return await this.authService.sighnUp(request);
   }
-  
 }
